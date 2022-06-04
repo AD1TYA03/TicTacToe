@@ -4,26 +4,37 @@ import React,{useState} from 'react';
 import bg from './assets/bg.jpeg'
 export default function App() {
   const [map,setMap]=useState([
-  ['O','O','O'],
-  ['X','X','X'],
-  ['O','O','X']
+  ['','',''],
+  ['','',''],
+  ['','','']
 ])
+const [currentTurn,setCurrentTurn]=useState("X");
 
+const onPress =(rowIndex,columnIndex)=>{
+console.warn("It worked",rowIndex,columnIndex);
+if(map[rowIndex][columnIndex] !== ''){
+console.log("Position occupied");
+return;
+}
+setMap((existingMap)=>{
+  const updatedMap=[...existingMap];
+  updatedMap[rowIndex][columnIndex]=currentTurn;
+  return updatedMap;
+});
 
-const onPress =()=>{
-console.warn("It worked");
+setCurrentTurn(currentTurn==='X' ? 'O' :'X');
 }
   return (
 
     <View style={styles.container}>
    <ImageBackground source={bg} style={styles.bg} resizeMethod="auto">
      <View style={styles.map}>
-     {map.map((row)=>(
+     {map.map((row,rowIndex)=>(
 
      <View style={styles.row}>
 
-       { row.map((cell)=>
-       <Pressable onPress={onPress} style={styles.cell}>
+       { row.map((cell,columnIndex)=>
+       <Pressable onPress={()=>onPress(rowIndex,columnIndex)} style={styles.cell}>
 
         {cell==='O'&& <View style={styles.circle}></View> }
         {cell==='X'&&  <View style={styles.crossCont}>
@@ -88,8 +99,7 @@ flexDirection:'row',
   },
   cell:{
     flex:1,
-    borderWidth:3,
-    borderColor:'red',
+   
     justifyContent:'center',
     alignItems:'center',
   },
